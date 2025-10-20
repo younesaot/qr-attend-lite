@@ -1,9 +1,10 @@
 import { useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Upload, Trash2, Database as DatabaseIcon, AlertCircle } from "lucide-react";
-import { exportDatabase, importDatabase, clearAllData, getStudents, getAttendanceRecords } from "@/lib/storage";
+import { Download, Upload, Trash2, Database as DatabaseIcon, AlertCircle, FileSpreadsheet } from "lucide-react";
+import { exportDatabase, importDatabase, clearAllData, getStudents, getAttendanceRecords, importStudentsFromExcel } from "@/lib/storage";
 import { toast } from "sonner";
+import * as XLSX from "xlsx";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,6 +19,7 @@ import {
 
 const Database = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const excelInputRef = useRef<HTMLInputElement>(null);
 
   const handleExport = () => {
     try {
@@ -63,6 +65,47 @@ const Database = () => {
     clearAllData();
     toast.success("تم حذف جميع البيانات");
     window.location.reload();
+  };
+
+  const handleImportExcel = () => {
+    excelInputRef.current?.click();
+  };
+
+  const handleExcelFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = new Uint8Array(event.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: "array" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        const students = jsonData.map((row: any) => ({
+          name: row["الاسم"] || row["name"] || row["Name"],
+          studentId: String(row["الرقم التعريفي"] || row["studentId"] || row["StudentID"] || row["ID"]),
+          grade: row["الصف"] || row["grade"] || row["Grade"],
+          phone: row["الهاتف"] || row["phone"] || row["Phone"] || "",
+          parentPhone: row["هاتف ولي الأمر"] || row["parentPhone"] || row["ParentPhone"] || "",
+        }));
+
+        const importedCount = importStudentsFromExcel(students);
+        
+        if (importedCount > 0) {
+          toast.success(`تم استيراد ${importedCount} تلميذ بنجاح`);
+          window.location.reload();
+        } else {
+          toast.info("جميع التلاميذ موجودون مسبقاً");
+        }
+      } catch (error) {
+        toast.error("فشل استيراد ملف Excel - تأكد من صحة البيانات");
+        console.error(error);
+      }
+    };
+    reader.readAsArrayBuffer(file);
   };
 
   const students = getStudents();
@@ -112,7 +155,7 @@ const Database = () => {
           <CardTitle>تصدير واستيراد البيانات</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="p-6 border-2 border-primary/20 rounded-lg space-y-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -152,6 +195,32 @@ const Database = () => {
                 className="hidden"
               />
               <p className="text-xs text-muted-foreground">اختر ملف JSON من نسخة احتياطية سابقة</p>
+            </div>
+
+            <div className="p-6 border-2 border-accent/20 rounded-lg space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                  <FileSpreadsheet className="w-5 h-5 text-accent" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-foreground">استيراد من Excel</h4>
+                  <p className="text-sm text-muted-foreground">أضف تلاميذ من ملف Excel</p>
+                </div>
+              </div>
+              <Button onClick={handleImportExcel} variant="outline" className="w-full" size="lg">
+                <FileSpreadsheet className="w-5 h-5 ml-2" />
+                استيراد تلاميذ من Excel
+              </Button>
+              <input
+                ref={excelInputRef}
+                type="file"
+                accept=".xlsx,.xls"
+                onChange={handleExcelFileChange}
+                className="hidden"
+              />
+              <p className="text-xs text-muted-foreground">
+                الأعمدة المطلوبة: الاسم، الرقم التعريفي، الصف
+              </p>
             </div>
           </div>
         </CardContent>

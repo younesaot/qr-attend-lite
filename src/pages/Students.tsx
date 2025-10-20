@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Edit, Trash2, QrCode, Users as UsersIcon } from "lucide-react";
+import { Plus, Search, Edit, Trash2, QrCode, Users as UsersIcon, Printer } from "lucide-react";
 import { getStudents, deleteStudent } from "@/lib/storage";
 import { Student } from "@/types/student";
 import { toast } from "sonner";
@@ -62,10 +62,22 @@ const Students = () => {
           <h2 className="text-3xl font-bold text-foreground mb-2">إدارة التلاميذ</h2>
           <p className="text-muted-foreground">إضافة وتعديل وحذف بيانات التلاميذ</p>
         </div>
-        <Button onClick={() => navigate("/students/add")} size="lg" className="gradient-primary">
-          <Plus className="w-5 h-5 ml-2" />
-          إضافة تلميذ جديد
-        </Button>
+        <div className="flex gap-2">
+          {students.length > 0 && (
+            <Button 
+              onClick={() => navigate("/students/print-all")} 
+              size="lg" 
+              variant="outline"
+            >
+              <Printer className="w-5 h-5 ml-2" />
+              طباعة جميع البطاقات
+            </Button>
+          )}
+          <Button onClick={() => navigate("/students/add")} size="lg" className="gradient-primary">
+            <Plus className="w-5 h-5 ml-2" />
+            إضافة تلميذ جديد
+          </Button>
+        </div>
       </div>
 
       <Card>

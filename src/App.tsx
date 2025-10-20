@@ -9,6 +9,7 @@ import ScanQR from "./pages/ScanQR";
 import Students from "./pages/Students";
 import StudentForm from "./pages/StudentForm";
 import StudentCard from "./pages/StudentCard";
+import AllStudentCards from "./pages/AllStudentCards";
 import Attendance from "./pages/Attendance";
 import Database from "./pages/Database";
 import NotFound from "./pages/NotFound";
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/students/add" element={<StudentForm />} />
             <Route path="/students/edit/:id" element={<StudentForm />} />
             <Route path="/students/card/:id" element={<StudentCard />} />
+            <Route path="/students/print-all" element={<AllStudentCards />} />
             <Route path="/attendance" element={<Attendance />} />
             <Route path="/database" element={<Database />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -51,6 +51,33 @@ export const getStudentByStudentId = (studentId: string): Student | undefined =>
   return getStudents().find((s) => s.studentId === studentId);
 };
 
+export const importStudentsFromExcel = (students: Partial<Student>[]): number => {
+  const existingStudents = getStudents();
+  let importedCount = 0;
+
+  students.forEach((studentData) => {
+    if (studentData.name && studentData.studentId && studentData.grade) {
+      const exists = existingStudents.some((s) => s.studentId === studentData.studentId);
+      if (!exists) {
+        const newStudent: Student = {
+          id: `student-${Date.now()}-${Math.random()}`,
+          name: studentData.name,
+          studentId: studentData.studentId,
+          grade: studentData.grade,
+          phone: studentData.phone || "",
+          parentPhone: studentData.parentPhone || "",
+          createdAt: new Date().toISOString(),
+        };
+        existingStudents.push(newStudent);
+        importedCount++;
+      }
+    }
+  });
+
+  saveStudents(existingStudents);
+  return importedCount;
+};
+
 // Attendance operations
 export const getAttendanceRecords = (): AttendanceRecord[] => {
   try {
