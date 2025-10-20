@@ -40,14 +40,22 @@ const ScanQR = () => {
   };
 
   const stopScanning = async () => {
-    if (scannerRef.current) {
+    if (scannerRef.current && scanning) {
       try {
-        await scannerRef.current.stop();
-        scannerRef.current.clear();
-        setScanning(false);
-        toast.info("تم إيقاف المسح");
+        await scannerRef.current.stop().then(() => {
+          if (scannerRef.current) {
+            scannerRef.current.clear();
+            scannerRef.current = null;
+          }
+          setScanning(false);
+          toast.info("تم إيقاف المسح");
+        }).catch((err) => {
+          console.error("Error stopping scanner:", err);
+          setScanning(false);
+        });
       } catch (error) {
-        console.error("Error stopping scanner:", error);
+        console.error("Error in stop process:", error);
+        setScanning(false);
       }
     }
   };
@@ -102,11 +110,20 @@ const ScanQR = () => {
 
   useEffect(() => {
     return () => {
-      if (scannerRef.current) {
-        scannerRef.current.stop().catch(console.error);
+      if (scannerRef.current && scanning) {
+        scannerRef.current.stop()
+          .then(() => {
+            if (scannerRef.current) {
+              scannerRef.current.clear();
+              scannerRef.current = null;
+            }
+          })
+          .catch((err) => {
+            console.error("Cleanup error:", err);
+          });
       }
     };
-  }, []);
+  }, [scanning]);
 
   return (
     <div className="space-y-6">
