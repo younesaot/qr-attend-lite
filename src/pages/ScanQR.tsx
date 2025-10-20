@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { Html5Qrcode } from "html5-qrcode";
+import { useState } from "react";
+import { Scanner } from "@yudiel/react-qr-scanner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Camera, XCircle, AlertCircle } from "lucide-react";
+import { CheckCircle, Camera, AlertCircle } from "lucide-react";
 import { getStudentByStudentId, addAttendanceRecord, checkIfMarkedToday } from "@/lib/storage";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -11,56 +11,11 @@ import { ar } from "date-fns/locale";
 const ScanQR = () => {
   const [scanning, setScanning] = useState(false);
   const [lastScan, setLastScan] = useState<any>(null);
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-  const qrReaderRef = useRef<HTMLDivElement>(null);
 
-  const startScanning = async () => {
-    try {
-      if (!qrReaderRef.current) return;
+  const handleScan = (result: any) => {
+    if (!result || !result[0]?.rawValue) return;
 
-      const html5QrCode = new Html5Qrcode("qr-reader");
-      scannerRef.current = html5QrCode;
-
-      await html5QrCode.start(
-        { facingMode: "environment" },
-        {
-          fps: 10,
-          qrbox: { width: 250, height: 250 },
-        },
-        onScanSuccess,
-        onScanFailure
-      );
-
-      setScanning(true);
-      toast.success("تم بدء المسح");
-    } catch (error) {
-      console.error("Error starting scanner:", error);
-      toast.error("فشل بدء المسح - تأكد من السماح بالوصول للكاميرا");
-    }
-  };
-
-  const stopScanning = async () => {
-    if (scannerRef.current && scanning) {
-      try {
-        await scannerRef.current.stop().then(() => {
-          if (scannerRef.current) {
-            scannerRef.current.clear();
-            scannerRef.current = null;
-          }
-          setScanning(false);
-          toast.info("تم إيقاف المسح");
-        }).catch((err) => {
-          console.error("Error stopping scanner:", err);
-          setScanning(false);
-        });
-      } catch (error) {
-        console.error("Error in stop process:", error);
-        setScanning(false);
-      }
-    }
-  };
-
-  const onScanSuccess = (decodedText: string) => {
+    const decodedText = result[0].rawValue;
     const student = getStudentByStudentId(decodedText);
 
     if (!student) {
@@ -104,26 +59,9 @@ const ScanQR = () => {
     });
   };
 
-  const onScanFailure = (error: string) => {
-    // Suppress continuous scanning errors in console
+  const handleError = (error: any) => {
+    console.error("Scanner error:", error);
   };
-
-  useEffect(() => {
-    return () => {
-      if (scannerRef.current && scanning) {
-        scannerRef.current.stop()
-          .then(() => {
-            if (scannerRef.current) {
-              scannerRef.current.clear();
-              scannerRef.current = null;
-            }
-          })
-          .catch((err) => {
-            console.error("Cleanup error:", err);
-          });
-      }
-    };
-  }, [scanning]);
 
   return (
     <div className="space-y-6">
@@ -135,34 +73,39 @@ const ScanQR = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>الكاميرا</CardTitle>
+            <CardTitle className="flex items-center justify-between">
+              <span>الكاميرا</span>
+              <Button
+                variant={scanning ? "destructive" : "default"}
+                size="sm"
+                onClick={() => setScanning(!scanning)}
+              >
+                {scanning ? "إيقاف" : "تشغيل"}
+              </Button>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div
-                id="qr-reader"
-                ref={qrReaderRef}
-                className="rounded-lg overflow-hidden bg-muted min-h-[300px] flex items-center justify-center"
-              >
-                {!scanning && (
+              <div className="rounded-lg overflow-hidden bg-muted min-h-[300px] flex items-center justify-center">
+                {scanning ? (
+                  <Scanner
+                    onScan={handleScan}
+                    onError={handleError}
+                    constraints={{
+                      facingMode: "environment",
+                    }}
+                    styles={{
+                      container: {
+                        width: "100%",
+                        height: "300px",
+                      },
+                    }}
+                  />
+                ) : (
                   <div className="text-center">
                     <Camera className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-muted-foreground">اضغط على "بدء المسح" لتشغيل الكاميرا</p>
+                    <p className="text-muted-foreground">اضغط على "تشغيل" لتشغيل الكاميرا</p>
                   </div>
-                )}
-              </div>
-
-              <div className="flex gap-3">
-                {!scanning ? (
-                  <Button onClick={startScanning} className="flex-1" size="lg">
-                    <Camera className="w-5 h-5 ml-2" />
-                    بدء المسح
-                  </Button>
-                ) : (
-                  <Button onClick={stopScanning} variant="destructive" className="flex-1" size="lg">
-                    <XCircle className="w-5 h-5 ml-2" />
-                    إيقاف المسح
-                  </Button>
                 )}
               </div>
             </div>
