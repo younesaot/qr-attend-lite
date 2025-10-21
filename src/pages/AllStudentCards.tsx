@@ -62,8 +62,9 @@ const AllStudentCards = () => {
                 <div className="absolute top-2 right-2 w-20 h-20 bg-white/20 rounded-full" />
                 <div className="absolute bottom-2 left-2 w-16 h-16 bg-white/20 rounded-full" />
               </div>
-              <div className="relative h-full flex items-center justify-center">
-                <h3 className="text-lg font-bold text-primary-foreground">نظام تسجيل الحضور</h3>
+              <div className="relative h-full flex flex-col items-center justify-center gap-0.5">
+                <h3 className="text-lg font-bold text-primary-foreground">ثانوية مالك بن نبي</h3>
+                <p className="text-xs text-primary-foreground/90">بطاقة مطعم</p>
               </div>
             </div>
 

@@ -90,8 +90,9 @@ const StudentCard = () => {
               <div className="absolute top-4 right-4 w-32 h-32 bg-white/20 rounded-full" />
               <div className="absolute bottom-4 left-4 w-24 h-24 bg-white/20 rounded-full" />
             </div>
-            <div className="relative h-full flex items-center justify-center">
-              <h3 className="text-2xl font-bold text-primary-foreground">نظام تسجيل الحضور</h3>
+            <div className="relative h-full flex flex-col items-center justify-center gap-1">
+              <h3 className="text-2xl font-bold text-primary-foreground">ثانوية مالك بن نبي</h3>
+              <p className="text-sm text-primary-foreground/90">بطاقة مطعم</p>
             </div>
           </div>
 
