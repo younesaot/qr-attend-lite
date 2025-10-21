@@ -136,4 +136,28 @@ All colors MUST be HSL.
   .gradient-success {
     background: var(--gradient-success);
   }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 640px) {
+    html {
+      font-size: 15px;
+    }
+  }
+  
+  /* Safe area handling for mobile devices */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+    }
+  }
 }
