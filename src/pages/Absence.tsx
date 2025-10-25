@@ -3,7 +3,7 @@ import { FileX, Download, Printer, Calendar } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getStudents, getTodayAttendance } from "@/lib/storage";
+import { getStudents, getAttendanceRecords } from "@/lib/storage";
 import { Student } from "@/types/student";
 import * as XLSX from "xlsx";
 
@@ -18,10 +18,15 @@ const Absence = () => {
 
   const loadAbsentStudents = () => {
     const allStudents = getStudents();
-    const attendanceRecords = getTodayAttendance();
+    const allAttendanceRecords = getAttendanceRecords();
     
-    // Find students who haven't attended
-    const attendedIds = new Set(attendanceRecords.map(record => record.studentId));
+    // Filter attendance records for the selected date
+    const attendanceForDate = allAttendanceRecords.filter(
+      record => record.date === selectedDate
+    );
+    
+    // Find students who haven't attended on the selected date
+    const attendedIds = new Set(attendanceForDate.map(record => record.studentId));
     const absent = allStudents.filter(student => !attendedIds.has(student.studentId));
     
     setAbsentStudents(absent);
