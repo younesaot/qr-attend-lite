@@ -13,6 +13,7 @@ import AllStudentCards from "./pages/AllStudentCards";
 import Attendance from "./pages/Attendance";
 import Absence from "./pages/Absence";
 import Database from "./pages/Database";
+import InstallApp from "./pages/InstallApp";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
             <Route path="/attendance" element={<Attendance />} />
             <Route path="/absence" element={<Absence />} />
             <Route path="/database" element={<Database />} />
+            <Route path="/install" element={<InstallApp />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

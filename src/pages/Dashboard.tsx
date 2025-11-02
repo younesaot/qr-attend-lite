@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Users, CheckCircle, Calendar, TrendingUp } from "lucide-react";
+import { Users, CheckCircle, Calendar, TrendingUp, QrCode, Smartphone } from "lucide-react";
 import StatCard from "@/components/StatCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { getStudents, getTodayAttendance, getAttendanceRecords } from "@/lib/storage";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const [totalStudents, setTotalStudents] = useState(0);
@@ -44,6 +46,26 @@ const Dashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Smartphone className="w-5 h-5" />
+              ثبّت التطبيق على هاتفك
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">
+              استخدم التطبيق بدون إنترنت واحصل على تجربة أفضل مع التثبيت على هاتفك
+            </p>
+            <Link to="/install">
+              <Button className="w-full" size="lg">
+                <Smartphone className="ml-2 h-5 w-5" />
+                تثبيت التطبيق الآن
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>آخر عمليات التسجيل</CardTitle>
@@ -121,8 +143,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
-// Add missing import
-import { QrCode } from "lucide-react";
 
 export default Dashboard;
