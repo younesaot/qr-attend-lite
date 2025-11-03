@@ -83,61 +83,39 @@ const StudentCard = () => {
       <div className="flex justify-center">
         <div
           ref={cardRef}
-          className="w-full max-w-2xl bg-white border-[6px] border-black shadow-2xl print:shadow-none"
-          style={{ aspectRatio: "1.6/1" }}
+          className="w-full max-w-md bg-white border-[6px] border-black shadow-2xl print:shadow-none"
         >
           {/* Header Section */}
-          <div className="border-b-4 border-black px-6 py-3">
+          <div className="border-b-4 border-black px-4 py-3">
             <div className="text-center space-y-1">
-              <p className="text-xs font-bold text-black">الجمهورية الجزائرية الديمقراطية الشعبية</p>
-              <p className="text-xs font-bold text-black">وزارة التربية الوطنية</p>
-              <p className="text-xs font-semibold text-black">مديرية التربية لولاية ادرار</p>
-              <p className="text-xs font-semibold text-black">ثانوية سيدي عبد الله 2</p>
-              <p className="text-[10px] text-black mt-1">الموسم الدراسي: 2023-2024</p>
+              <p className="text-sm font-bold text-black">الجمهورية الجزائرية الديمقراطية الشعبية</p>
+              <p className="text-sm font-bold text-black">وزارة التربية الوطنية</p>
+              <p className="text-base font-bold text-black mt-2">ثانوية مالك بن نبي</p>
             </div>
-          </div>
-
-          {/* Card Title */}
-          <div className="text-center py-3 border-b-2 border-black">
-            <h2 className="text-2xl font-bold text-black">بطاقة الإطعام</h2>
           </div>
 
           {/* Main Content */}
-          <div className="flex h-[calc(100%-140px)]">
-            {/* Photo Section - Left */}
-            <div className="w-1/3 border-l-4 border-black flex items-center justify-center p-4">
-              <div className="w-32 h-40 border-2 border-black bg-gray-100"></div>
+          <div className="p-6 space-y-6">
+            {/* Student Info */}
+            <div className="space-y-4 text-right">
+              <div className="flex justify-between items-center border-b-2 border-black pb-2">
+                <span className="font-bold text-black text-lg">{student.name}</span>
+                <span className="text-base text-black font-semibold">:اللقب والاسم</span>
+              </div>
+              <div className="flex justify-between items-center border-b-2 border-black pb-2">
+                <span className="font-bold text-black text-lg">{student.grade}</span>
+                <span className="text-base text-black font-semibold">:القسم</span>
+              </div>
+              <div className="flex justify-between items-center border-b-2 border-black pb-2">
+                <span className="font-bold text-black text-lg">{student.studentId}</span>
+                <span className="text-base text-black font-semibold">:رقم التعريف الوطني</span>
+              </div>
             </div>
 
-            {/* Info and QR Section - Right */}
-            <div className="w-2/3 flex flex-col justify-between p-6">
-              {/* Student Info */}
-              <div className="space-y-3 text-right">
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-black text-lg">{student.name}</span>
-                  <span className="text-sm text-black">:اللقب والاسم</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-black text-lg">{student.studentId}</span>
-                  <span className="text-sm text-black">:رقم التعريف</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-bold text-black text-lg">{student.grade}</span>
-                  <span className="text-sm text-black">:القسم</span>
-                </div>
-                {student.phone && (
-                  <div className="flex justify-between items-center">
-                    <span className="font-bold text-black">{student.phone}</span>
-                    <span className="text-sm text-black">:رقم الهاتف</span>
-                  </div>
-                )}
-              </div>
-
-              {/* QR Code Section */}
-              <div className="flex justify-center">
-                <div className="p-2 bg-white border-2 border-black">
-                  <QRCodeSVG value={student.studentId} size={120} level="H" includeMargin={false} />
-                </div>
+            {/* QR Code Section */}
+            <div className="flex justify-center pt-4">
+              <div className="p-3 bg-white border-4 border-black">
+                <QRCodeSVG value={student.studentId} size={150} level="H" includeMargin={false} />
               </div>
             </div>
           </div>
