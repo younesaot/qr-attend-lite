@@ -28,7 +28,7 @@ const ScanQR = () => {
       return;
     }
 
-    const alreadyMarked = checkIfMarkedToday(student.id);
+    const alreadyMarked = checkIfMarkedToday(student.studentId);
     if (alreadyMarked) {
       toast.error(`تم تسجيل حضور ${student.name} مسبقاً اليوم`);
       setLastScan({
@@ -43,7 +43,7 @@ const ScanQR = () => {
     const now = new Date();
     const record = {
       id: `att-${Date.now()}`,
-      studentId: student.id,
+      studentId: student.studentId,
       studentName: student.name,
       date: format(now, "yyyy-MM-dd"),
       time: format(now, "HH:mm:ss"),

@@ -51,15 +51,15 @@ const AllStudentCards = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 print:grid-cols-2 print:gap-6">
+      <div className="grid grid-cols-1 gap-8 print:grid-cols-1 print:gap-6">
         {students.map((student) => (
           <div
             key={student.id}
             className="bg-white border-[6px] border-black shadow-lg print:shadow-none print:break-inside-avoid print:mb-8"
-            style={{ maxWidth: "350px", margin: "0 auto" }}
+            style={{ maxWidth: "600px", aspectRatio: "1.6/1", margin: "0 auto" }}
           >
             {/* Header Section */}
-            <div className="border-b-4 border-black px-3 py-2">
+            <div className="border-b-4 border-black px-4 py-2">
               <div className="text-center space-y-0.5">
                 <p className="text-[10px] font-bold text-black">الجمهورية الجزائرية الديمقراطية الشعبية</p>
                 <p className="text-[10px] font-bold text-black">وزارة التربية الوطنية</p>
@@ -68,27 +68,27 @@ const AllStudentCards = () => {
             </div>
 
             {/* Main Content */}
-            <div className="p-4 space-y-4">
-              {/* Student Info */}
-              <div className="space-y-3 text-right">
+            <div className="flex h-[calc(100%-70px)]">
+              {/* Info Section - Right */}
+              <div className="w-2/3 flex flex-col justify-center p-4 space-y-3">
                 <div className="flex justify-between items-center border-b-2 border-black pb-1">
-                  <span className="font-bold text-black text-sm">{student.name}</span>
-                  <span className="text-xs text-black font-semibold">:اللقب والاسم</span>
+                  <span className="font-bold text-black text-base">{student.name}</span>
+                  <span className="text-sm text-black font-semibold">:اللقب والاسم</span>
                 </div>
                 <div className="flex justify-between items-center border-b-2 border-black pb-1">
-                  <span className="font-bold text-black text-sm">{student.grade}</span>
-                  <span className="text-xs text-black font-semibold">:القسم</span>
+                  <span className="font-bold text-black text-base">{student.grade}</span>
+                  <span className="text-sm text-black font-semibold">:القسم</span>
                 </div>
                 <div className="flex justify-between items-center border-b-2 border-black pb-1">
-                  <span className="font-bold text-black text-sm">{student.studentId}</span>
-                  <span className="text-xs text-black font-semibold">:رقم التعريف الوطني</span>
+                  <span className="font-bold text-black text-base">{student.studentId}</span>
+                  <span className="text-sm text-black font-semibold">:رقم التعريف الوطني</span>
                 </div>
               </div>
 
-              {/* QR Code Section */}
-              <div className="flex justify-center pt-2">
-                <div className="p-2 bg-white border-3 border-black">
-                  <QRCodeSVG value={student.studentId} size={120} level="H" includeMargin={false} />
+              {/* QR Code Section - Left */}
+              <div className="w-1/3 border-r-4 border-black flex items-center justify-center p-3">
+                <div className="p-2 bg-white border-2 border-black">
+                  <QRCodeSVG value={student.studentId} size={100} level="H" includeMargin={false} />
                 </div>
               </div>
             </div>

@@ -83,21 +83,22 @@ const StudentCard = () => {
       <div className="flex justify-center">
         <div
           ref={cardRef}
-          className="w-full max-w-md bg-white border-[6px] border-black shadow-2xl print:shadow-none"
+          className="w-full bg-white border-[6px] border-black shadow-2xl print:shadow-none"
+          style={{ maxWidth: "600px", aspectRatio: "1.6/1" }}
         >
           {/* Header Section */}
-          <div className="border-b-4 border-black px-4 py-3">
-            <div className="text-center space-y-1">
-              <p className="text-sm font-bold text-black">الجمهورية الجزائرية الديمقراطية الشعبية</p>
-              <p className="text-sm font-bold text-black">وزارة التربية الوطنية</p>
-              <p className="text-base font-bold text-black mt-2">ثانوية مالك بن نبي</p>
+          <div className="border-b-4 border-black px-4 py-2">
+            <div className="text-center space-y-0.5">
+              <p className="text-[11px] font-bold text-black">الجمهورية الجزائرية الديمقراطية الشعبية</p>
+              <p className="text-[11px] font-bold text-black">وزارة التربية الوطنية</p>
+              <p className="text-sm font-bold text-black mt-1">ثانوية مالك بن نبي</p>
             </div>
           </div>
 
           {/* Main Content */}
-          <div className="p-6 space-y-6">
-            {/* Student Info */}
-            <div className="space-y-4 text-right">
+          <div className="flex h-[calc(100%-80px)]">
+            {/* Info Section - Right */}
+            <div className="w-2/3 flex flex-col justify-center p-6 space-y-4">
               <div className="flex justify-between items-center border-b-2 border-black pb-2">
                 <span className="font-bold text-black text-lg">{student.name}</span>
                 <span className="text-base text-black font-semibold">:اللقب والاسم</span>
@@ -112,10 +113,10 @@ const StudentCard = () => {
               </div>
             </div>
 
-            {/* QR Code Section */}
-            <div className="flex justify-center pt-4">
-              <div className="p-3 bg-white border-4 border-black">
-                <QRCodeSVG value={student.studentId} size={150} level="H" includeMargin={false} />
+            {/* QR Code Section - Left */}
+            <div className="w-1/3 border-r-4 border-black flex items-center justify-center p-4">
+              <div className="p-3 bg-white border-3 border-black">
+                <QRCodeSVG value={student.studentId} size={120} level="H" includeMargin={false} />
               </div>
             </div>
           </div>
