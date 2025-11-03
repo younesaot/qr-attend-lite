@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, QrCode, Users, FileText, FileX, Database } from "lucide-react";
+import { Home, QrCode, Users, FileText, FileX, Database, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -12,6 +12,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     { path: "/attendance", icon: FileText, label: "سجل الحضور" },
     { path: "/absence", icon: FileX, label: "سجل الغياب" },
     { path: "/database", icon: Database, label: "قاعدة البيانات" },
+    { path: "/about", icon: Info, label: "من نحن" },
   ];
 
   return (
@@ -63,7 +64,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
       <footer className="border-t border-border bg-card py-3 sm:py-4 mt-auto">
         <div className="container mx-auto px-3 sm:px-4 text-center text-xs sm:text-sm text-muted-foreground">
-          © 2025 نظام تسجيل الحضور - جميع الحقوق محفوظة
+          <p>© 2025 نظام تسجيل الحضور - جميع الحقوق محفوظة</p>
+          <p className="mt-1">
+            تم التطوير بواسطة{" "}
+            <Link to="/about" className="text-primary hover:underline font-medium">
+              حاج جيلاني يونس
+            </Link>
+          </p>
         </div>
       </footer>
     </div>
