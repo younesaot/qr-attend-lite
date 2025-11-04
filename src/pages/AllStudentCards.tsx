@@ -78,7 +78,7 @@ const AllStudentCards = () => {
               </div>
 
               {/* Info Section - Right */}
-              <div className="w-3/4 flex flex-col justify-center p-4 space-y-3">
+              <div className="w-3/4 flex flex-col justify-center p-4 space-y-2">
                 <div className="flex justify-between items-center border-b-2 border-black pb-1">
                   <span className="font-bold text-black text-base">{student.name}</span>
                   <span className="text-sm text-black font-semibold">:اللقب والاسم</span>
@@ -91,6 +91,18 @@ const AllStudentCards = () => {
                   <span className="font-bold text-black text-base">{student.studentId}</span>
                   <span className="text-sm text-black font-semibold">:رقم التعريف الوطني</span>
                 </div>
+                {student.gender && (
+                  <div className="flex justify-between items-center border-b-2 border-black pb-1">
+                    <span className="font-bold text-black text-sm">{student.gender}</span>
+                    <span className="text-xs text-black font-semibold">:الجنس</span>
+                  </div>
+                )}
+                {student.status && (
+                  <div className="flex justify-between items-center border-b-2 border-black pb-1">
+                    <span className="font-bold text-black text-sm">{student.status}</span>
+                    <span className="text-xs text-black font-semibold">:الصفة</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

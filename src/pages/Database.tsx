@@ -110,6 +110,12 @@ const Database = () => {
 
   const students = getStudents();
   const records = getAttendanceRecords();
+  
+  // حساب عدد الغائبين اليوم
+  const today = new Date().toISOString().split("T")[0];
+  const todayRecords = records.filter(record => record.date === today);
+  const presentStudentIds = new Set(todayRecords.map(record => record.studentId));
+  const absentCount = students.length - presentStudentIds.size;
 
   return (
     <div className="space-y-6">
@@ -118,7 +124,7 @@ const Database = () => {
         <p className="text-muted-foreground">نقل البيانات وإدارة النسخ الاحتياطية</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardContent className="p-6 text-center">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
@@ -136,6 +142,16 @@ const Database = () => {
             </div>
             <h3 className="text-2xl font-bold text-foreground mb-1">{records.length}</h3>
             <p className="text-sm text-muted-foreground">سجل حضور</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive/10 flex items-center justify-center">
+              <AlertCircle className="w-8 h-8 text-destructive" />
+            </div>
+            <h3 className="text-2xl font-bold text-foreground mb-1">{absentCount}</h3>
+            <p className="text-sm text-muted-foreground">تلميذ غائب اليوم</p>
           </CardContent>
         </Card>
 
