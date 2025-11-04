@@ -69,8 +69,16 @@ const AllStudentCards = () => {
 
             {/* Main Content */}
             <div className="flex h-[calc(100%-70px)]">
+              {/* QR Code Section - Left */}
+              <div className="w-1/4 border-l-4 border-black flex flex-col items-center justify-center p-3 space-y-2">
+                <div className="p-2 bg-white border-2 border-black">
+                  <QRCodeSVG value={student.studentId} size={80} level="H" includeMargin={false} />
+                </div>
+                <p className="text-[10px] font-bold text-black text-center">2025/2026</p>
+              </div>
+
               {/* Info Section - Right */}
-              <div className="w-2/3 flex flex-col justify-center p-4 space-y-3">
+              <div className="w-3/4 flex flex-col justify-center p-4 space-y-3">
                 <div className="flex justify-between items-center border-b-2 border-black pb-1">
                   <span className="font-bold text-black text-base">{student.name}</span>
                   <span className="text-sm text-black font-semibold">:اللقب والاسم</span>
@@ -82,13 +90,6 @@ const AllStudentCards = () => {
                 <div className="flex justify-between items-center border-b-2 border-black pb-1">
                   <span className="font-bold text-black text-base">{student.studentId}</span>
                   <span className="text-sm text-black font-semibold">:رقم التعريف الوطني</span>
-                </div>
-              </div>
-
-              {/* QR Code Section - Left */}
-              <div className="w-1/3 border-r-4 border-black flex items-center justify-center p-3">
-                <div className="p-2 bg-white border-2 border-black">
-                  <QRCodeSVG value={student.studentId} size={100} level="H" includeMargin={false} />
                 </div>
               </div>
             </div>

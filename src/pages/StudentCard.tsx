@@ -97,6 +97,14 @@ const StudentCard = () => {
 
           {/* Main Content */}
           <div className="flex h-[calc(100%-80px)]">
+            {/* QR Code Section - Left */}
+            <div className="w-1/3 border-l-4 border-black flex flex-col items-center justify-center p-4 space-y-3">
+              <div className="p-3 bg-white border-3 border-black">
+                <QRCodeSVG value={student.studentId} size={120} level="H" includeMargin={false} />
+              </div>
+              <p className="text-sm font-bold text-black text-center">2025/2026</p>
+            </div>
+
             {/* Info Section - Right */}
             <div className="w-2/3 flex flex-col justify-center p-6 space-y-4">
               <div className="flex justify-between items-center border-b-2 border-black pb-2">
@@ -110,13 +118,6 @@ const StudentCard = () => {
               <div className="flex justify-between items-center border-b-2 border-black pb-2">
                 <span className="font-bold text-black text-lg">{student.studentId}</span>
                 <span className="text-base text-black font-semibold">:رقم التعريف الوطني</span>
-              </div>
-            </div>
-
-            {/* QR Code Section - Left */}
-            <div className="w-1/3 border-r-4 border-black flex items-center justify-center p-4">
-              <div className="p-3 bg-white border-3 border-black">
-                <QRCodeSVG value={student.studentId} size={120} level="H" includeMargin={false} />
               </div>
             </div>
           </div>

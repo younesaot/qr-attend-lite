@@ -88,8 +88,8 @@ const Database = () => {
           name: row["الاسم"] || row["name"] || row["Name"],
           studentId: String(row["الرقم التعريفي"] || row["studentId"] || row["StudentID"] || row["ID"]),
           grade: row["الصف"] || row["grade"] || row["Grade"],
-          phone: row["الهاتف"] || row["phone"] || row["Phone"] || "",
-          parentPhone: row["هاتف ولي الأمر"] || row["parentPhone"] || row["ParentPhone"] || "",
+          gender: row["الجنس"] || row["gender"] || row["Gender"] || "",
+          status: row["الصفة"] || row["status"] || row["Status"] || "",
         }));
 
         const importedCount = importStudentsFromExcel(students);
@@ -219,7 +219,7 @@ const Database = () => {
                 className="hidden"
               />
               <p className="text-xs text-muted-foreground">
-                الأعمدة المطلوبة: الاسم، الرقم التعريفي، الصف
+                الأعمدة المطلوبة: الاسم، الرقم التعريفي، الصف، الجنس، الصفة
               </p>
             </div>
           </div>
