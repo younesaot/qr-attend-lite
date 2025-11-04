@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Edit, Trash2, QrCode, Users as UsersIcon, Printer } from "lucide-react";
-import { getStudents, deleteStudent } from "@/lib/storage";
+import { Plus, Search, Edit, Trash2, QrCode, Users as UsersIcon, Printer, Check, X } from "lucide-react";
+import { getStudents, deleteStudent, addAttendanceRecord, checkIfMarkedToday, getAttendanceRecords, saveAttendanceRecords } from "@/lib/storage";
 import { Student } from "@/types/student";
 import { toast } from "sonner";
 import {
@@ -53,6 +53,43 @@ const Students = () => {
       setDeleteDialogOpen(false);
       setStudentToDelete(null);
     }
+  };
+
+  const handleMarkPresent = (student: Student) => {
+    if (checkIfMarkedToday(student.studentId)) {
+      toast.info("التلميذ مسجل حضوره اليوم بالفعل");
+      return;
+    }
+
+    const now = new Date();
+    const record = {
+      id: `attendance-${Date.now()}`,
+      studentId: student.studentId,
+      studentName: student.name,
+      date: now.toISOString().split("T")[0],
+      time: now.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" }),
+      timestamp: now.getTime(),
+    };
+
+    addAttendanceRecord(record);
+    toast.success(`تم تسجيل حضور ${student.name}`);
+  };
+
+  const handleMarkAbsent = (student: Student) => {
+    const records = getAttendanceRecords();
+    const today = new Date().toISOString().split("T")[0];
+    
+    const filteredRecords = records.filter(
+      record => !(record.studentId === student.studentId && record.date === today)
+    );
+
+    if (filteredRecords.length === records.length) {
+      toast.info("التلميذ غير مسجل حضوره اليوم");
+      return;
+    }
+
+    saveAttendanceRecords(filteredRecords);
+    toast.success(`تم تسجيل غياب ${student.name}`);
   };
 
   return (
@@ -130,28 +167,50 @@ const Students = () => {
                   )}
                 </div>
 
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1"
-                    onClick={() => navigate(`/students/card/${student.id}`)}
-                  >
-                    <QrCode className="w-4 h-4 ml-1" />
-                    البطاقة
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1"
-                    onClick={() => navigate(`/students/edit/${student.id}`)}
-                  >
-                    <Edit className="w-4 h-4 ml-1" />
-                    تعديل
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleDelete(student.id)}>
-                    <Trash2 className="w-4 h-4 text-destructive" />
-                  </Button>
+                <div className="flex flex-col gap-2">
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleMarkPresent(student)}
+                    >
+                      <Check className="w-4 h-4 ml-1 text-green-600" />
+                      حضور
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => handleMarkAbsent(student)}
+                    >
+                      <X className="w-4 h-4 ml-1 text-red-600" />
+                      غياب
+                    </Button>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => navigate(`/students/card/${student.id}`)}
+                    >
+                      <QrCode className="w-4 h-4 ml-1" />
+                      البطاقة
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={() => navigate(`/students/edit/${student.id}`)}
+                    >
+                      <Edit className="w-4 h-4 ml-1" />
+                      تعديل
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => handleDelete(student.id)}>
+                      <Trash2 className="w-4 h-4 text-destructive" />
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
