@@ -18,8 +18,8 @@ const StudentForm = () => {
     name: "",
     studentId: "",
     grade: "",
-    phone: "",
-    parentPhone: "",
+    gender: "",
+    status: "",
   });
 
   useEffect(() => {
@@ -30,8 +30,8 @@ const StudentForm = () => {
           name: student.name,
           studentId: student.studentId,
           grade: student.grade,
-          phone: student.phone || "",
-          parentPhone: student.parentPhone || "",
+          gender: student.gender || "",
+          status: student.status || "",
         });
       }
     }
@@ -122,24 +122,28 @@ const StudentForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">رقم هاتف التلميذ</Label>
+              <Label htmlFor="gender">
+                الجنس <span className="text-destructive">*</span>
+              </Label>
               <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                placeholder="اختياري"
-                type="tel"
+                id="gender"
+                value={formData.gender}
+                onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                placeholder="ذكر أو أنثى"
+                required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="parentPhone">رقم هاتف ولي الأمر</Label>
+              <Label htmlFor="status">
+                الصفة <span className="text-destructive">*</span>
+              </Label>
               <Input
-                id="parentPhone"
-                value={formData.parentPhone}
-                onChange={(e) => setFormData({ ...formData, parentPhone: e.target.value })}
-                placeholder="اختياري"
-                type="tel"
+                id="status"
+                value={formData.status}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                placeholder="مثال: داخلي، نصف داخلي، خارجي"
+                required
               />
             </div>
 

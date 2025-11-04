@@ -64,8 +64,8 @@ export const importStudentsFromExcel = (students: Partial<Student>[]): number =>
           name: studentData.name,
           studentId: studentData.studentId,
           grade: studentData.grade,
-          phone: studentData.phone || "",
-          parentPhone: studentData.parentPhone || "",
+          gender: studentData.gender || "",
+          status: studentData.status || "",
           createdAt: new Date().toISOString(),
         };
         existingStudents.push(newStudent);

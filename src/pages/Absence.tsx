@@ -44,8 +44,8 @@ const Absence = () => {
       "الاسم": student.name,
       "الرقم التعريفي": student.studentId,
       "الصف": student.grade,
-      "الهاتف": student.phone || "",
-      "هاتف ولي الأمر": student.parentPhone || "",
+      "الجنس": student.gender || "",
+      "الصفة": student.status || "",
     }));
 
     const ws = XLSX.utils.json_to_sheet(data);
@@ -154,14 +154,14 @@ const Absence = () => {
                     </div>
                   </div>
                   <div className="text-left">
-                    {student.phone && (
+                    {student.gender && (
                       <p className="text-sm text-muted-foreground">
-                        الهاتف: {student.phone}
+                        الجنس: {student.gender}
                       </p>
                     )}
-                    {student.parentPhone && (
+                    {student.status && (
                       <p className="text-sm text-muted-foreground">
-                        ولي الأمر: {student.parentPhone}
+                        الصفة: {student.status}
                       </p>
                     )}
                   </div>

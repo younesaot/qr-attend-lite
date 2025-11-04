@@ -116,16 +116,16 @@ const Students = () => {
                     <span className="text-muted-foreground">الرقم التعريفي:</span>
                     <span className="font-medium text-foreground">{student.studentId}</span>
                   </div>
-                  {student.phone && (
+                  {student.gender && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">الهاتف:</span>
-                      <span className="font-medium text-foreground">{student.phone}</span>
+                      <span className="text-muted-foreground">الجنس:</span>
+                      <span className="font-medium text-foreground">{student.gender}</span>
                     </div>
                   )}
-                  {student.parentPhone && (
+                  {student.status && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">هاتف ولي الأمر:</span>
-                      <span className="font-medium text-foreground">{student.parentPhone}</span>
+                      <span className="text-muted-foreground">الصفة:</span>
+                      <span className="font-medium text-foreground">{student.status}</span>
                     </div>
                   )}
                 </div>

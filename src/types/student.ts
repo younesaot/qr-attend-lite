@@ -3,8 +3,8 @@ export interface Student {
   name: string;
   studentId: string;
   grade: string;
-  phone?: string;
-  parentPhone?: string;
+  gender?: string;
+  status?: string;
   photo?: string;
   createdAt: string;
 }
