@@ -145,3 +145,93 @@ export const clearAllData = (): void => {
   localStorage.removeItem(STUDENTS_KEY);
   localStorage.removeItem(ATTENDANCE_KEY);
 };
+
+// Archive operations
+const ARCHIVE_KEY = "attendance_archives";
+const LAST_ARCHIVE_DATE_KEY = "last_archive_date";
+
+export interface Archive {
+  id: string;
+  date: string;
+  timestamp: string;
+  data: DatabaseExport;
+}
+
+export const getArchives = (): Archive[] => {
+  try {
+    const data = localStorage.getItem(ARCHIVE_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error("Error reading archives:", error);
+    return [];
+  }
+};
+
+export const saveArchives = (archives: Archive[]): void => {
+  try {
+    localStorage.setItem(ARCHIVE_KEY, JSON.stringify(archives));
+  } catch (error) {
+    console.error("Error saving archives:", error);
+  }
+};
+
+export const createArchive = (): Archive => {
+  const now = new Date();
+  const archive: Archive = {
+    id: `archive-${now.getTime()}`,
+    date: now.toISOString().split("T")[0],
+    timestamp: now.toISOString(),
+    data: exportDatabase(),
+  };
+  
+  const archives = getArchives();
+  archives.push(archive);
+  
+  // Keep only last 30 archives
+  if (archives.length > 30) {
+    archives.splice(0, archives.length - 30);
+  }
+  
+  saveArchives(archives);
+  localStorage.setItem(LAST_ARCHIVE_DATE_KEY, archive.date);
+  
+  return archive;
+};
+
+export const restoreFromArchive = (archiveId: string): boolean => {
+  try {
+    const archives = getArchives();
+    const archive = archives.find((a) => a.id === archiveId);
+    
+    if (!archive) {
+      return false;
+    }
+    
+    importDatabase(archive.data);
+    return true;
+  } catch (error) {
+    console.error("Error restoring archive:", error);
+    return false;
+  }
+};
+
+export const deleteArchive = (archiveId: string): void => {
+  const archives = getArchives().filter((a) => a.id !== archiveId);
+  saveArchives(archives);
+};
+
+export const shouldCreateDailyArchive = (): boolean => {
+  const today = new Date().toISOString().split("T")[0];
+  const lastArchiveDate = localStorage.getItem(LAST_ARCHIVE_DATE_KEY);
+  return lastArchiveDate !== today;
+};
+
+export const checkAndCreateDailyArchive = (): void => {
+  const now = new Date();
+  const hour = now.getHours();
+  
+  // Check if it's 10 AM and we haven't archived today
+  if (hour === 10 && shouldCreateDailyArchive()) {
+    createArchive();
+  }
+};
