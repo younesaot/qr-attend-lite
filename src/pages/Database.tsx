@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, Upload, Trash2, Database as DatabaseIcon, AlertCircle, FileSpreadsheet } from "lucide-react";
+import { Download, Upload, Trash2, Database as DatabaseIcon, AlertCircle, FileSpreadsheet, Share2 } from "lucide-react";
 import { exportDatabase, importDatabase, clearAllData, getStudents, getAttendanceRecords, importStudentsFromExcel } from "@/lib/storage";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
@@ -35,6 +35,33 @@ const Database = () => {
     } catch (error) {
       toast.error("فشل تصدير قاعدة البيانات");
       console.error(error);
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const data = exportDatabase();
+      const jsonString = JSON.stringify(data, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const file = new File([blob], `attendance-backup-${new Date().toISOString().split("T")[0]}.json`, {
+        type: "application/json",
+      });
+
+      if (navigator.share && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: "نسخة احتياطية - قاعدة البيانات",
+          text: "قاعدة بيانات الحضور",
+        });
+        toast.success("تم مشاركة الملف بنجاح");
+      } else {
+        toast.error("متصفحك لا يدعم مشاركة الملفات");
+      }
+    } catch (error) {
+      if ((error as Error).name !== "AbortError") {
+        toast.error("فشل مشاركة الملف");
+        console.error(error);
+      }
     }
   };
 
@@ -178,15 +205,21 @@ const Database = () => {
                   <Download className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-foreground">تصدير البيانات</h4>
-                  <p className="text-sm text-muted-foreground">احفظ نسخة احتياطية</p>
+                  <h4 className="font-bold text-foreground">تصدير ومشاركة</h4>
+                  <p className="text-sm text-muted-foreground">احفظ أو شارك البيانات</p>
                 </div>
               </div>
-              <Button onClick={handleExport} className="w-full gradient-primary" size="lg">
-                <Download className="w-5 h-5 ml-2" />
-                تصدير قاعدة البيانات
-              </Button>
-              <p className="text-xs text-muted-foreground">سيتم حفظ ملف JSON يحتوي على جميع البيانات</p>
+              <div className="flex gap-2">
+                <Button onClick={handleExport} className="flex-1 gradient-primary" size="lg">
+                  <Download className="w-5 h-5 ml-2" />
+                  تصدير
+                </Button>
+                <Button onClick={handleShare} variant="outline" size="lg" className="flex-1">
+                  <Share2 className="w-5 h-5 ml-2" />
+                  مشاركة
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">احفظ أو شارك ملف JSON عبر البلوتوث أو التطبيقات الأخرى</p>
             </div>
 
             <div className="p-6 border-2 border-success/20 rounded-lg space-y-3">
