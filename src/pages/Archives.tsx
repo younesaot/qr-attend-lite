@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Archive, Download, Trash2, RotateCcw, Database } from "lucide-react";
+import { Archive, Download, Trash2, RotateCcw, Database, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -90,6 +90,31 @@ export default function Archives() {
     }
   };
 
+  const handleShare = async (archive: ArchiveType) => {
+    try {
+      const dataStr = JSON.stringify(archive.data, null, 2);
+      const blob = new Blob([dataStr], { type: "application/json" });
+      const file = new File([blob], `archive-${archive.date}.json`, {
+        type: "application/json",
+      });
+
+      if (navigator.share && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: `نسخة احتياطية - ${archive.date}`,
+          text: "نسخة احتياطية من قاعدة بيانات الحضور",
+        });
+        toast.success("تم مشاركة النسخة الاحتياطية");
+      } else {
+        toast.error("متصفحك لا يدعم مشاركة الملفات");
+      }
+    } catch (error) {
+      if ((error as Error).name !== "AbortError") {
+        toast.error("حدث خطأ في المشاركة");
+      }
+    }
+  };
+
   const formatDateTime = (timestamp: string) => {
     return format(new Date(timestamp), "PPpp", { locale: ar });
   };
@@ -154,6 +179,15 @@ export default function Archives() {
                     >
                       <Download className="h-4 w-4" />
                       تنزيل
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleShare(archive)}
+                      className="gap-2"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      مشاركة
                     </Button>
                     <Button
                       variant="outline"

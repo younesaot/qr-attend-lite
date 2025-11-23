@@ -122,21 +122,23 @@ const AllStudentCards = () => {
           }
           @page {
             size: A4 portrait;
-            margin: 1.5cm;
+            margin: 1cm;
           }
           .print\\:break-inside-avoid {
             break-inside: avoid;
             page-break-inside: avoid;
           }
-          .print\\:grid-cols-2 {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 2cm;
-          }
           .print\\:gap-6 {
-            gap: 2cm;
+            gap: 1.5cm;
           }
           .print\\:mb-8 {
-            margin-bottom: 2cm;
+            margin-bottom: 1.5cm;
+          }
+          /* تحسين جودة الطباعة */
+          * {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
           }
         }
       `}</style>
