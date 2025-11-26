@@ -15,6 +15,7 @@ import Attendance from "./pages/Attendance";
 import Absence from "./pages/Absence";
 import Database from "./pages/Database";
 import Archives from "./pages/Archives";
+import Share from "./pages/Share";
 import InstallApp from "./pages/InstallApp";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
@@ -54,6 +55,7 @@ const App = () => {
               <Route path="/absence" element={<Absence />} />
               <Route path="/database" element={<Database />} />
               <Route path="/archives" element={<Archives />} />
+              <Route path="/share" element={<Share />} />
               <Route path="/install" element={<InstallApp />} />
               <Route path="/about" element={<About />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

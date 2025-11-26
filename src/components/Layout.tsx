@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, QrCode, Users, FileText, FileX, Database, Archive, Info } from "lucide-react";
+import { Home, QrCode, Users, FileText, FileX, Database, Archive, Share2, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -13,6 +13,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     { path: "/absence", icon: FileX, label: "سجل الغياب" },
     { path: "/database", icon: Database, label: "قاعدة البيانات" },
     { path: "/archives", icon: Archive, label: "الأرشيف" },
+    { path: "/share", icon: Share2, label: "مشاركة" },
     { path: "/about", icon: Info, label: "من نحن" },
   ];
 
