@@ -227,11 +227,8 @@ export const shouldCreateDailyArchive = (): boolean => {
 };
 
 export const checkAndCreateDailyArchive = (): void => {
-  const now = new Date();
-  const hour = now.getHours();
-  
-  // Check if it's 10 AM and we haven't archived today
-  if (hour === 10 && shouldCreateDailyArchive()) {
+  // Always create archive if we haven't archived today
+  if (shouldCreateDailyArchive()) {
     createArchive();
   }
 };

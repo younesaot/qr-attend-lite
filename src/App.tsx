@@ -27,13 +27,6 @@ const App = () => {
   useEffect(() => {
     // Check and create daily archive on app load
     checkAndCreateDailyArchive();
-    
-    // Check every hour
-    const interval = setInterval(() => {
-      checkAndCreateDailyArchive();
-    }, 60 * 60 * 1000);
-    
-    return () => clearInterval(interval);
   }, []);
 
   return (
