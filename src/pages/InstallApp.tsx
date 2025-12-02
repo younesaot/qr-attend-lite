@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import Layout from "@/components/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Smartphone, Download, CheckCircle, Wifi, WifiOff } from "lucide-react";
+import { Smartphone, Download, CheckCircle, Wifi, WifiOff, Monitor, Apple, Chrome } from "lucide-react";
 import { toast } from "sonner";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -14,8 +13,14 @@ const InstallApp = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
 
   useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    setIsIOS(/iphone|ipad|ipod/.test(userAgent));
+    setIsAndroid(/android/.test(userAgent));
+
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
@@ -38,7 +43,11 @@ const InstallApp = () => {
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
-      toast.error("التطبيق مثبت بالفعل أو المتصفح لا يدعم التثبيت");
+      if (isIOS) {
+        toast.info("على iPhone: اضغط زر المشاركة ثم 'إضافة إلى الشاشة الرئيسية'");
+      } else {
+        toast.error("التطبيق مثبت بالفعل أو المتصفح لا يدعم التثبيت");
+      }
       return;
     }
 
@@ -55,141 +64,152 @@ const InstallApp = () => {
   };
 
   return (
-    <Layout>
-      <div className="container mx-auto p-4 max-w-4xl">
-        <Card className="mb-6">
+    <div className="container mx-auto p-4 max-w-4xl">
+      {/* Hero Section */}
+      <Card className="mb-6 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
+        <CardHeader className="text-center pb-2">
+          <div className="mx-auto mb-4 p-4 bg-primary/10 rounded-full w-fit">
+            <Smartphone className="h-12 w-12 text-primary" />
+          </div>
+          <CardTitle className="text-3xl">تحميل التطبيق</CardTitle>
+          <CardDescription className="text-lg mt-2">
+            ثبّت التطبيق على جهازك واستخدمه بدون إنترنت
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            {isOnline ? (
+              <Wifi className="h-5 w-5 text-green-500" />
+            ) : (
+              <WifiOff className="h-5 w-5 text-orange-500" />
+            )}
+            <span className="text-sm text-muted-foreground">
+              {isOnline ? "متصل بالإنترنت" : "غير متصل - التطبيق يعمل!"}
+            </span>
+          </div>
+
+          {/* Main Install Button */}
+          <Button
+            onClick={handleInstallClick}
+            size="lg"
+            className="w-full max-w-md h-14 text-lg gap-3"
+          >
+            <Download className="h-6 w-6" />
+            {isInstallable ? "تحميل التطبيق الآن" : isIOS ? "طريقة التثبيت على iPhone" : "تثبيت التطبيق"}
+          </Button>
+
+          {!isInstallable && !isIOS && (
+            <p className="text-sm text-muted-foreground mt-3">
+              ✓ التطبيق مثبت بالفعل أو جاهز للتثبيت من قائمة المتصفح
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        {/* Android Instructions */}
+        <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-2xl flex items-center gap-2">
-                  <Smartphone className="h-6 w-6" />
-                  تثبيت التطبيق
-                </CardTitle>
-                <CardDescription className="text-base mt-2">
-                  استخدم التطبيق على هاتفك مثل التطبيقات العادية
-                </CardDescription>
-              </div>
-              <div className="flex items-center gap-2">
-                {isOnline ? (
-                  <Wifi className="h-5 w-5 text-green-500" />
-                ) : (
-                  <WifiOff className="h-5 w-5 text-orange-500" />
-                )}
-                <span className="text-sm text-muted-foreground">
-                  {isOnline ? "متصل" : "غير متصل"}
-                </span>
-              </div>
-            </div>
+            <CardTitle className="flex items-center gap-2">
+              <Chrome className="h-5 w-5 text-green-600" />
+              Android (Chrome)
+            </CardTitle>
           </CardHeader>
+          <CardContent>
+            <ol className="space-y-3 text-sm">
+              <li className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">1</span>
+                <span>افتح قائمة المتصفح (⋮) أعلى اليمين</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">2</span>
+                <span>اختر "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية"</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">3</span>
+                <span>اضغط "تثبيت" في النافذة المنبثقة</span>
+              </li>
+            </ol>
+          </CardContent>
         </Card>
 
-        <div className="grid gap-6">
-          {/* Install Button Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>تثبيت سريع</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isInstallable ? (
-                <Button
-                  onClick={handleInstallClick}
-                  size="lg"
-                  className="w-full"
-                >
-                  <Download className="ml-2 h-5 w-5" />
-                  تثبيت التطبيق الآن
-                </Button>
-              ) : (
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-2" />
-                  <p className="text-lg font-medium">التطبيق مثبت بالفعل</p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    يمكنك الوصول إليه من شاشة هاتفك الرئيسية
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+        {/* iOS Instructions */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Apple className="h-5 w-5" />
+              iPhone / iPad (Safari)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ol className="space-y-3 text-sm">
+              <li className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">1</span>
+                <span>اضغط على زر المشاركة (□↑) أسفل الشاشة</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">2</span>
+                <span>اسحب لأسفل واختر "إضافة إلى الشاشة الرئيسية"</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold">3</span>
+                <span>اضغط "إضافة" في أعلى اليمين</span>
+              </li>
+            </ol>
+          </CardContent>
+        </Card>
+      </div>
 
-          {/* Features Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>مميزات التطبيق</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">يعمل بدون إنترنت</p>
-                    <p className="text-sm text-muted-foreground">
-                      جميع البيانات محفوظة على جهازك ولا تحتاج اتصال بالإنترنت
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">أيقونة على الشاشة الرئيسية</p>
-                    <p className="text-sm text-muted-foreground">
-                      افتح التطبيق مباشرة من هاتفك مثل أي تطبيق آخر
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">سريع وموثوق</p>
-                    <p className="text-sm text-muted-foreground">
-                      يعمل بسرعة عالية ويحفظ بياناتك بشكل آمن
-                    </p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-medium">تحديثات تلقائية</p>
-                    <p className="text-sm text-muted-foreground">
-                      يتحدث التطبيق تلقائياً عند توفر نسخة جديدة
-                    </p>
-                  </div>
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
+      {/* APK Section */}
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Monitor className="h-5 w-5" />
+            تحويل إلى APK (للمطورين)
+          </CardTitle>
+          <CardDescription>
+            لبناء تطبيق Android أصلي يحتاج Android Studio
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="bg-muted/50 rounded-lg p-4 font-mono text-sm space-y-2 overflow-x-auto">
+            <p className="text-muted-foreground"># على جهاز الكمبيوتر:</p>
+            <p>git clone [رابط المشروع من GitHub]</p>
+            <p>npm install</p>
+            <p>npx cap add android</p>
+            <p>npm run build</p>
+            <p>npx cap sync android</p>
+            <p>npx cap open android</p>
+            <p className="text-muted-foreground"># ثم من Android Studio: Build → Build APK</p>
+          </div>
+        </CardContent>
+      </Card>
 
-          {/* Manual Instructions Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>طريقة التثبيت اليدوية</CardTitle>
-              <CardDescription>
-                إذا لم يعمل زر التثبيت التلقائي، اتبع هذه الخطوات
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
+      {/* Features */}
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle>مميزات التطبيق</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[
+              { title: "يعمل بدون إنترنت", desc: "جميع البيانات محفوظة محلياً" },
+              { title: "أيقونة على الشاشة", desc: "وصول سريع مثل أي تطبيق" },
+              { title: "سريع وآمن", desc: "أداء عالي وحماية للبيانات" },
+              { title: "تحديثات تلقائية", desc: "يتحدث عند توفر نسخة جديدة" },
+            ].map((feature, i) => (
+              <div key={i} className="flex gap-3 p-3 bg-muted/30 rounded-lg">
+                <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
                 <div>
-                  <h4 className="font-medium mb-2">📱 Android (Chrome):</h4>
-                  <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground mr-4">
-                    <li>افتح قائمة المتصفح (⋮)</li>
-                    <li>اختر "إضافة إلى الشاشة الرئيسية"</li>
-                    <li>اضغط "إضافة" أو "تثبيت"</li>
-                  </ol>
-                </div>
-                <div>
-                  <h4 className="font-medium mb-2">📱 iPhone (Safari):</h4>
-                  <ol className="list-decimal list-inside space-y-1 text-sm text-muted-foreground mr-4">
-                    <li>اضغط على زر المشاركة (□↑)</li>
-                    <li>اسحب لأسفل واختر "إضافة إلى الشاشة الرئيسية"</li>
-                    <li>اضغط "إضافة"</li>
-                  </ol>
+                  <p className="font-medium">{feature.title}</p>
+                  <p className="text-sm text-muted-foreground">{feature.desc}</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </Layout>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
